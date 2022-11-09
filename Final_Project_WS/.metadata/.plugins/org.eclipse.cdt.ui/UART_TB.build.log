@@ -1,0 +1,39 @@
+06:27:02 **** Incremental Build of configuration Debug for project UART_TB ****
+make all 
+Building file: ../main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"main.d" -MT"main.o" -c -o "main.o" "../main.c"
+Finished building: ../main.c
+ 
+Building file: ../uart.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"uart.d" -MT"uart.o" -c -o "uart.o" "../uart.c"
+Finished building: ../uart.c
+ 
+Building target: UART_TB.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,UART_TB.map -mmcu=atmega32 -o "UART_TB.elf"  ./main.o ./uart.o   
+Finished building target: UART_TB.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S UART_TB.elf  >"UART_TB.lss"
+Finished building: UART_TB.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 UART_TB.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:    1316 bytes (4.0% Full)
+(.text + .data + .bootloader)
+
+Data:         23 bytes (1.1% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+06:27:03 Build Finished. 0 errors, 0 warnings. (took 666ms)
+

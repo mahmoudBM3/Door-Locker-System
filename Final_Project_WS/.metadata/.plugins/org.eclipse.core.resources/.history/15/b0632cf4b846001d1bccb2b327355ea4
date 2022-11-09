@@ -1,0 +1,17 @@
+#include<avr/io.h>
+#include"common_macros.h"
+void UART_init(void) {
+
+}
+void UART_sendByte(uint8 data) {
+
+	while (BIT_IS_CLEAR(UCSRA, UDRE))
+		;
+	UDR = data;
+	return;
+}
+uint8 UART_receiveByte(void) {
+	while (BIT_IS_CLEAR(UCSRA, RXC))
+		;
+	return UDR;
+}

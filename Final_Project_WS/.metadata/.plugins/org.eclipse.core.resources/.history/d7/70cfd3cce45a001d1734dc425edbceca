@@ -1,0 +1,32 @@
+/*
+ * main.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+#include"lcd.h"
+#include"keypad.h"
+#include"menus.h"
+#include"uart.h"
+#include"app.h"
+#include<util/delay.h>
+#define	WRONG_CONFIRMATION	255
+
+int main() {
+	{
+		UART_ConfigType uartconfig = { 9600, ASYNCH, EIGHTBIT, RECEIVEPOLLING,
+				TRANSMITPOLLING, ONEBIT, NOPARITY };
+		UART_init(&uartconfig);
+	}
+	APP_SystemStatus systemstatus = NOT_INITIALIZED;
+	LCD_init();
+	LCD_clearScreen();
+	while (1) {
+		if (systemstatus == NOT_INITIALIZED) {
+			APP_setPassword();
+			systemstatus = INITIALIZED;
+		}
+		APP_systemControl();
+	}
+}

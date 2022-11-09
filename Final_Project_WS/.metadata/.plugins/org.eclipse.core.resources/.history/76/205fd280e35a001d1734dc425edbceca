@@ -1,0 +1,18 @@
+/*
+ * main.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+#include"uart.h"
+#include<util/delay.h>
+int main() {
+	{
+		UART_ConfigType uartconfig = { 9600, ASYNCH, EIGHTBIT, RECEIVEPOLLING,
+				TRANSMITPOLLING, ONEBIT, NOPARITY };
+		UART_init(&uartconfig);
+	}
+	_delay_ms(50);
+	UART_sendByte(255);
+}
+

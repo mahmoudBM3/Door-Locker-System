@@ -1,0 +1,8 @@
+#include"gpio.h"
+#include"seven_segment.h"
+void SEVEN_SEGMENT_init(uint8 num){
+	GPIO_setupPinDirection(SEVEN_SEGMENT_PORT_ID,SEVEN_SEGMENT_FIRST_PIN_ID,PIN_OUTPUT);
+}
+void SEVEN_SEGMENT_displayDigit(uint8 num){
+
+}

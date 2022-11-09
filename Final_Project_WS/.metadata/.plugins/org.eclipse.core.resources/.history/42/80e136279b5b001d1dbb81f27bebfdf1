@@ -1,0 +1,98 @@
+/*
+ * app.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+#include"lcd.h"
+#include"keypad.h"
+#include"menus.h"
+#include"uart.h"
+#include"app.h"
+#include<util/delay.h>
+#define KEYPAD_DELAY	300
+/**This function is used to set the password if it's not set **/
+void APP_setPassword(void) {
+	/**Status Byte is sent in the beginning to synchronize the two µCs**/
+	uint8 status = UART_receiveByte();
+	while (1) {
+		/**Print the Main menu**/
+		uint8 count = 0;
+		MENUS_enterPassMenu();
+		/**Get the First Password**/
+		for (count = 0; count < 5; count++) {
+			/**Get the pressed key on the keypad and send it to the other µC**/
+			_delay_ms(KEYPAD_DELAY);
+			UART_sendByte(KEYPAD_getPressedKey());
+			/**Display the * on the LCD**/
+			LCD_displayCharacter('*');
+		}
+		/**Display the Re-Enter the Password LCD**/
+		MENUS_reenterPassMenu();
+		/**Get the Second Password**/
+		for (count = 0; count < 5; count++) {
+			/**Get the pressed key on the keypad and send it to the other µC**/
+			_delay_ms(KEYPAD_DELAY);
+			UART_sendByte(KEYPAD_getPressedKey());
+			/**Display the * on the LCD**/
+			LCD_displayCharacter('*');
+		}
+		/**Wait for the result from the other µC to know if the passwords match
+		 * or not**/
+		status = UART_receiveByte();
+		/**if the Passwords don't match then tell the user and Re-set the Whole
+		 * process of setting the Password**/
+		if (status == WRONG_CONFIRMATION) {
+			LCD_clearScreen();
+			LCD_moveCursor(0, 5);
+			LCD_displayString("Wrong");
+			LCD_moveCursor(1, 2);
+			LCD_displayString("Confirmation");
+			_delay_ms(1000);
+			continue;
+		} else if (status == PASSWORD_MATCHED) {
+			return;
+		}
+	}
+}
+void APP_systemControl(void) {
+	MENUS_mainMenu();
+	uint8 pressedkey = KEYPAD_getPressedKey();
+	if (pressedkey == OPEN_DOOR) {
+		UART_sendByte(OPEN_DOOR);
+		APP_getPassword();
+	} else if (pressedkey == RESET_PASSWORD) {
+		UART_sendByte(RESET_PASSWORD);
+		APP_setPassword();
+	}
+}
+void APP_getPassword(void) {
+	uint8 count = 0;
+	MENUS_enterPassMenu();
+	for (count = 0; count < 5; count++) {
+		_delay_ms(KEYPAD_DELAY);
+		UART_sendByte(KEYPAD_getPressedKey());
+		LCD_displayCharacter('*');
+	}
+	uint8 status = UART_receiveByte();
+	if (status == PASSWORD_MATCHED) {
+		LCD_clearScreen();
+		LCD_displayString("Correct");
+		_delay_ms(1000);
+
+	} else if (status == PASSWORD_UNMATCHED) {
+		LCD_clearScreen();
+		LCD_displayString("Wrong Pass");
+		_delay_ms(1000);
+		return;
+	} else if (status == PASSWORD_TRIALS_EXHAUSTED) {
+		LCD_clearScreen();
+		LCD_displayString("Wrong Pass");
+		_delay_ms(1000);
+		LCD_clearScreen();
+		LCD_displayString("   TRESPASSER");
+		_delay_ms(3000);
+
+	}
+
+}

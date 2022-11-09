@@ -1,0 +1,94 @@
+/*#include"icu.h"
+ #include"lcd.h"
+ #include"std_types.h"
+ uint8 g_edgecount=0;
+ uint16 g_hightime=0;
+ uint16 g_periodtime=0;
+ uint16 g_periodtimeplushightime=0;
+
+ void Edge_processing(void){
+ g_edgecount++;
+ if(g_edgecount==1){
+ ICU_clearTimerCount();
+ ICU_setEdgeDetectionType(FALLING);
+ }
+ else if(g_edgecount==2){
+ g_hightime=ICU_getInputCaptureValue();
+ ICU_setEdgeDetectionType(RISING);
+ }else if(g_edgecount==3){
+ g_periodtime=ICU_getInputCaptureValue();
+ ICU_setEdgeDetectionType(FALLING);
+ }else if(g_edgecount==4){
+ g_periodtimeplushightime=ICU_getInputCaptureValue();
+ ICU_setEdgeDetectionType(RISING);
+ }
+ }
+
+ int main() {
+ ICU_ConfigType icuconfig = { ICU_FCPU_8, FALLING };
+ uint8 dutycycle=0;
+ LCD_init();
+ ICU_init(&icuconfig);
+ ICU_clearTimerCount();
+ ICU_setCallbackFunction(Edge_processing);
+ while (1)
+ {if (g_edgecount==4){
+ ICU_deinit();
+ g_edgecount=0;
+ dutycycle=(uint8)((g_periodtimeplushightime-g_periodtime)/(g_periodtimeplushightime-g_hightime));
+ LCD_displayString("duty = ");
+ LCD_integerToString(dutycycle);
+ LCD_displayCharacter('%');
+ }
+
+ }
+ */
+/*
+ ================================================================================================
+ Name        : Exercise1.c
+ Author      : Mohamed Tarek
+ Description : Exercise to test the UART functionality
+ Date        : 4/11/2014
+ ================================================================================================
+ */
+#ifdef control
+#include "uart.h"
+void uarthandle(void){
+ UART_sendByte(g_uartdata);
+ }
+int main(void) {
+	//uint8 Str[20];
+	//uint8 data;
+	UART_ConfigType config = { 9600, ASYNCH, EIGHTBIT, RECEIVEINTERRUPT,
+			TRANSMITPOLLING, ONEBIT, EVEN };
+
+	/* Initialize the UART driver with Baud-rate = 9600 bits/sec */
+	UART_init(&config);
+	UART_setCallBack(uarthandle);
+	while (1) {
+		UART_receiveByte();
+		//data = UART_receiveByte(); /* Receive Byte from Terminal */
+		//UART_sendByte(data);       /* Re-send the received byte to Terminal */
+//		UART_receiveString(Str);     /* Receive String from Terminal */
+//	    UART_sendString(Str);        /* Re-send the string to Terminal2 */
+	}
+}
+#endif
+#include"ultrasonic.h"
+#include"util/delay.h"
+#include "lcd.h"
+int main(){
+	LCD_init();
+	US_init();
+	LCD_displayString("OKAY?");
+	_delay_ms(500);
+	uint16 distance=0;
+	while(1){
+		LCD_moveCursor(0,0);
+		distance=US_getDistance();
+		LCD_integerToString(distance);
+		LCD_displayString("   ");
+	}
+
+
+}

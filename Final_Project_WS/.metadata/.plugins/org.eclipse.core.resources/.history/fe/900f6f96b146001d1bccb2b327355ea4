@@ -1,0 +1,24 @@
+#include"gpio.h"
+#include"seven_segment.h"
+#include"common_macros.h"
+void SEVEN_SEGMENT_init(uint8 num) {
+	GPIO_setupPinDirection(SEVEN_SEGMENT_PORT_ID, SEVEN_SEGMENT_FIRST_PIN_ID,
+			PIN_OUTPUT);
+	GPIO_setupPinDirection(SEVEN_SEGMENT_PORT_ID,
+			SEVEN_SEGMENT_FIRST_PIN_ID + 1, PIN_OUTPUT);
+	GPIO_setupPinDirection(SEVEN_SEGMENT_PORT_ID,
+			SEVEN_SEGMENT_FIRST_PIN_ID + 2, PIN_OUTPUT);
+	GPIO_setupPinDirection(SEVEN_SEGMENT_PORT_ID,
+			SEVEN_SEGMENT_FIRST_PIN_ID + 3, PIN_OUTPUT);
+}
+void SEVEN_SEGMENT_displayDigit(uint8 num) {
+	GPIO_writePin(SEVEN_SEGMENT_PORT_ID, SEVEN_SEGMENT_FIRST_PIN_ID,
+			GET_BIT(num, 0));
+	GPIO_writePin(SEVEN_SEGMENT_PORT_ID, SEVEN_SEGMENT_FIRST_PIN_ID + 1,
+			GET_BIT(num, 1));
+	GPIO_writePin(SEVEN_SEGMENT_PORT_ID, SEVEN_SEGMENT_FIRST_PIN_ID + 2,
+			GET_BIT(num, 2));
+	GPIO_writePin(SEVEN_SEGMENT_PORT_ID, SEVEN_SEGMENT_FIRST_PIN_ID + 3,
+			GET_BIT(num, 3));
+
+}

@@ -1,0 +1,31 @@
+/*
+ * app.h
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+#ifndef APP_H_
+#define APP_H_
+#include "std_types.h"
+typedef enum {
+	PASSWORD_WRONG, PASSWORD_CORRECT
+} APP_PasswordCompareType;
+
+#define	WRONG_CONFIRMATION	255
+#define OPEN_DOOR			'+'
+#define RESET_PASSWORD		'-'
+#define SET_PASSWORD		255
+#define SYSTEM_START		255
+#define PASSWORD_MATCHED	254
+#define PASSWORD_UNMATCHED	253
+#define GET_PASSWORD		253
+#define PASSWORD_TRIALS_EXHAUSTED 252
+#define ENTER_KEY			' '
+
+void APP_setPassword(void);
+void APP_systemControl(void);
+APP_PasswordCompareType APP_getPassword(void);
+void APP_startAlarm(void);
+void APP_stopAlarm(void);
+#endif /* APP_H_ */

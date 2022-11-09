@@ -1,0 +1,20 @@
+11:07:31 **** Incremental Build of configuration Debug for project SPI_EX1_MC1_2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 SPI_EX1_MC1_2.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:    2666 bytes (8.1% Full)
+(.text + .data + .bootloader)
+
+Data:          0 bytes (0.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+11:07:31 Build Finished. 0 errors, 0 warnings. (took 151ms)
+

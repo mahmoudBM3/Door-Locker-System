@@ -1,0 +1,15 @@
+#include"dc_motor.h"
+#include"lcd.h"
+#include"lm35_sensor.h"
+#include"adc.h"
+#include"keypad.h"
+#include<util/delay.h>
+int main() {
+	LCD_init();
+while(1){
+	uint8 num=KEYPAD_getPressedKey();
+	_delay_ms(1000);
+	LCD_integerToString(num);
+}
+
+}

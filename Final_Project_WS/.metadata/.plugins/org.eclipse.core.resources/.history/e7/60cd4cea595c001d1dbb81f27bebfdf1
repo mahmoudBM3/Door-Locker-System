@@ -1,0 +1,34 @@
+/*
+ * app.h
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+#ifndef APP_H_
+#define APP_H_
+
+#define	WRONG_CONFIRMATION			255
+#define OPEN_DOOR					'+'
+#define RESET_PASSWORD				'-'
+#define SYSTEM_START				255
+#define PASSWORD_MATCHED			254
+#define PASSWORD_UNMATCHED			253
+#define PASSWORD_TRIALS_EXHAUSTED	252
+#define KEYPAD_DELAY				300
+#define ENTER_KEY					' '
+#define OPEN_DOOR_TIME				5
+#define	CLOSE_DOOR_TIME				5
+#define	HOLD_DOOR_TIME				2
+#define ONE_SECOND_COUNT			(1000*8)
+typedef enum {
+	INITIALIZED,NOT_INITIALIZED
+}APP_SystemStatus;
+void APP_setPassword(void);
+void APP_systemControl(void);
+void APP_getPassword(void);
+void APP_displayDoorUnlocking(void);
+void APP_displayDoorUnlocked(void);
+void APP_displayDoorLocking(void);
+void APP_displayDoorComplete(void);
+#endif /* APP_H_ */

@@ -1,0 +1,155 @@
+/*
+ * app.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+#include "uart.h"
+#include "app.h"
+#include"buzzer.h"
+#include"timer1.h"
+#include"dc_motor.h"
+#include<util/delay.h>
+uint8 systempassword[5] = { 0 };
+void APP_setPassword(void) {
+	uint8 wrongcount = 0;
+	uint8 password1[5];
+	uint8 password2[5];
+	uint8 count = 0;
+	while (1) {
+		uint8 flag = 1;
+		/**Get the first Password**/
+		for (count = 0; count < 5; count++) {
+			password1[count] = UART_receiveByte();
+		}
+		/**wait for the Enter KEY**/
+		while (UART_receiveByte() != ENTER_KEY)
+			;
+		/**Get the Second Password**/
+		for (count = 0; count < 5; count++) {
+			password2[count] = UART_receiveByte();
+		}
+		/**wait for the Enter KEY**/
+		while (UART_receiveByte() != ENTER_KEY)
+			;
+		/**Compare the Two passwords**/
+		for (count = 0; count < 5; count++) {
+			if (password1[count] != password2[count]) {
+				flag = 0;
+			}
+		}
+		/**if the passwords match store it in the Global password variable and
+		 *  store it in EEPROM**/
+		if (flag == 1) {
+			UART_sendByte(PASSWORD_MATCHED);
+			for (count = 0; count < 5; count++) {
+				systempassword[count] = password1[count];
+			}
+			/**PUT The PASSword in the EEPROM**/
+			break;
+		} else if (flag == 0) {
+			wrongcount++;
+			/**If number of trials limit is reached Alert**/
+			if (wrongcount >= 3) {
+				UART_sendByte(PASSWORD_TRIALS_EXHAUSTED);
+				/**Turning the buzzer on**/
+				APP_startAlarm();
+			}
+			/**if the passwords don't match Tell the Other µC**/
+			UART_sendByte(WRONG_CONFIRMATION);
+			continue;
+		}
+	}
+}
+/**The main Function that controls the main system when in main menu**/
+void APP_systemControl(void) {
+	static uint8 wrongpasscount = 0;
+	/**Get the user choice**/
+	uint8 choice = UART_receiveByte();
+	if (choice == OPEN_DOOR) {
+		/**get the password Comparison result **/
+		APP_PasswordCompareType result = APP_getPassword();
+		if (result == PASSWORD_CORRECT) {
+			/**if the password is correct Open the Door and Reset the wrong
+			 * trials counter adn tell the other µC**/
+			UART_sendByte(PASSWORD_MATCHED);
+			wrongpasscount = 0;
+			/**Open The Door**/
+			APP_openDoor();
+		} else if (result == PASSWORD_WRONG) {
+			/**if the password is not correct reset the wrong trials counter**/
+			wrongpasscount++;
+			if (wrongpasscount == 3) {
+				/**if the number of wrong trials reaches the limit make an ALERT**/
+				wrongpasscount = 0;
+				UART_sendByte(PASSWORD_TRIALS_EXHAUSTED);
+				/**Ring the buzzer**/
+				APP_startAlarm();
+			} else {
+				UART_sendByte(PASSWORD_UNMATCHED);
+			}
+		}
+	} else if (choice == RESET_PASSWORD) {
+		APP_setPassword();
+	}
+}
+APP_PasswordCompareType APP_getPassword(void) {
+	uint8 count = 0;
+	uint8 password[5];
+	/**get the user input password**/
+	for (count = 0; count < 5; count++) {
+		password[count] = UART_receiveByte();
+	}
+	/**wait for the Enter KEY**/
+	while (UART_receiveByte() != ENTER_KEY)
+		;
+	/**Compare the Input password with the saved password**/
+	for (count = 0; count < 5; count++) {
+		if (systempassword[count] != password[count]) {
+			return PASSWORD_WRONG;
+		}
+	}
+	return PASSWORD_CORRECT;
+}
+void APP_startAlarm(void) {
+	Timer1_ConfigType config = { 0, BUZZER_TIME*ONE_SECOND_COUNT, TIMER1_FCPU_1024,
+			TIMER1_COMPARE };
+	Timer1_init(&config);
+	BUZZER_ON();
+	Timer1_setCallBack(APP_stopAlarm);
+}
+void APP_stopAlarm(void) {
+	BUZZER_OFF();
+	Timer1_deinit();
+}
+void APP_openDoor(void) {
+	Timer1_ConfigType config = { 0, 3*ONE_SECOND_COUNT, TIMER1_FCPU_1024,
+			TIMER1_COMPARE };
+	Timer1_init(&config);
+	DCMOTOR_rotate(CLOCKWISE, 100);
+	Timer1_setCallBack(APP_holdDoor);
+	_delay_ms(1000);
+	APP_holdDoor();
+
+}
+void APP_holdDoor(void){
+	static uint8 holdcount=0;
+	Timer1_ConfigType config = { 0, 3*ONE_SECOND_COUNT, TIMER1_FCPU_1024,
+			TIMER1_COMPARE };
+	Timer1_init(&config);
+	DCMOTOR_rotate(STOP, 100);
+	Timer1_setCallBack(APP_closeDoor);
+
+	if(holdcount!=0){
+		holdcount=0;
+		Timer1_deinit();
+	}
+	holdcount++;
+}
+void APP_closeDoor(void){
+	Timer1_ConfigType config = { 0, 3*ONE_SECOND_COUNT, TIMER1_FCPU_1024,
+			TIMER1_COMPARE };
+	Timer1_init(&config);
+	DCMOTOR_rotate(ANTICLOCKWISE, 100);
+}
+

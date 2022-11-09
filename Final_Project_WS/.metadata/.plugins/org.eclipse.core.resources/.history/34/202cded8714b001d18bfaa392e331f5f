@@ -1,0 +1,61 @@
+/*
+ * ultrasonic.c
+ *
+ *  Created on: Oct 13, 2022
+ *      Author: mabkr
+ */
+#include"ultrasonic.h"
+#include"util/delay.h"
+#include"icu.h"
+#include"gpio.h"
+uint16 g_hightime = 0;
+uint16 g_inittime = 0;
+uint8 g_edgecount = 0;
+void Edge_processing(void) {
+	g_edgecount++;
+	if (g_edgecount == 1) {
+		g_inittime = Icu_getInputCaptureValue();
+		Icu_setEdgeDetectionType(FALLING);
+	} else if (g_edgecount == 2) {
+		g_hightime = Icu_getInputCaptureValue();
+		Icu_setEdgeDetectionType(RISING);
+	}
+}
+void US_init(void) {
+	while (1) {
+			GPIO_writePin(PORTB_ID, PIN0_ID, LOGIC_HIGH);
+
+			GPIO_writePin(PORTB_ID, PIN0_ID, LOGIC_LOW);
+
+		}
+
+	Icu_ConfigType icuconfig = { F_CPU_8, RISING };
+	Icu_init(&icuconfig);
+	Icu_setCallBack(Edge_processing);
+	GPIO_setupPinDirection(US_TRIG_PORT, US_TRIG_PIN, PIN_OUTPUT);
+	GPIO_writePin(US_TRIG_PORT, US_TRIG_PIN, LOGIC_LOW);
+
+}
+
+uint16 US_getDistance(void) {
+	Icu_clearTimerValue();
+	GPIO_writePin(US_TRIG_PORT, US_TRIG_PIN, LOGIC_HIGH);
+	while (1) {
+		GPIO_writePin(PORTB_ID, PIN0_ID, LOGIC_HIGH);
+
+		GPIO_writePin(PORTB_ID, PIN0_ID, LOGIC_LOW);
+
+	}
+	GPIO_writePin(US_TRIG_PORT, US_TRIG_PIN, LOGIC_LOW);
+	uint16 hightime = (g_hightime - g_inittime);
+	uint16 distance = ((uint64) hightime) * 17250.0 / (F_CPU / ICU_PRESCALER);
+	GPIO_writePin(US_TRIG_PORT, US_TRIG_PIN, LOGIC_LOW);
+	//ICU_deinit();
+	//GPIO_setupPinDirection(US_TRIG_PORT, US_TRIG_PIN, PIN_INPUT);
+	g_inittime = 0;
+	g_edgecount = 0;
+	g_hightime = 0;
+	return distance;
+
+}
+

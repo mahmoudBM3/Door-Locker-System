@@ -1,0 +1,49 @@
+/*
+ * app.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+#include"lcd.h"
+#include"keypad.h"
+#include"menus.h"
+#include"uart.h"
+#include"app.h"
+#include<util/delay.h>
+void APP_setPassword(void) {
+	uint8 status = UART_receiveByte();
+	while (1) {
+		uint8 count = 0;
+		MENUS_enterPassMenu();
+		for (count = 0; count < 5; count++) {
+			_delay_ms(500);
+			UART_sendByte(KEYPAD_getPressedKey());
+			LCD_displayCharacter('*');
+		}
+		MENUS_reenterPassMenu();
+		for (count = 0; count < 5; count++) {
+			_delay_ms(500);
+			UART_sendByte(KEYPAD_getPressedKey());
+			LCD_displayCharacter('*');
+		}
+		status=UART_receiveByte();
+		if(status==WRONG_CONFIRMATION){
+			LCD_clearScreen();
+			LCD_displayString("Wrong Confirmation");
+			_delay_ms(1000);
+			continue;
+		}else if (status==PASSWORD_MATCH){
+			return;
+		}
+	}
+}
+void APP_systemControl(void) {
+	MENUS_mainMenu();
+	uint8 pressedkey = KEYPAD_getPressedKey();
+	if (pressedkey == OPEN_DOOR) {
+		UART_sendByte(OPEN_DOOR);
+	} else if (pressedkey == RESET_PASSWORD) {
+		UART_sendByte(RESET_PASSWORD);
+		APP_setPassword();
+	}
+}

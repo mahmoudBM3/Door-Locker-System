@@ -1,0 +1,17 @@
+/*
+ * main.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+#include"lcd.h"
+#include"keypad.h"
+#include"menus.h"
+int main(){
+	LCD_init();
+	MENUS_mainMenu();
+	while(1){
+
+	}
+}

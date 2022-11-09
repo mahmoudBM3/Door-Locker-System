@@ -1,0 +1,17 @@
+/*
+ * menus.h
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+#ifndef MENUS_H_
+#define MENUS_H_
+
+void MENUS_reenterPassMenu(void);
+void MENUS_enterPassMenu(void);
+void MENUS_mainMenu(void);
+void MENUS_enterNewPassMenu(void);
+
+
+#endif /* MENUS_H_ */

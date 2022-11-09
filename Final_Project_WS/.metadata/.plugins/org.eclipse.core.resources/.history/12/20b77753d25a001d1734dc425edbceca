@@ -1,0 +1,18 @@
+/*
+ * main.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+#include"lcd.h"
+#include"keypad.h"
+#include"menus.h"
+int main() {
+	LCD_init();
+	LCD_clearScreen();
+	LCD_displayString("Ready?");
+	while (1) {
+		LCD_integerToString(KEYPAD_getPressedKey());
+	}
+}

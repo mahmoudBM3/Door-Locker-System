@@ -1,0 +1,21 @@
+/*
+ * app.h
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+#ifndef APP_H_
+#define APP_H_
+void APP_setPassword(void);
+void APP_systemControl(void);
+#define	WRONG_CONFIRMATION	255
+#define OPEN_DOOR			'+'
+#define RESET_PASSWORD		'-'
+#define SYSTEM_START		255
+typedef enum {
+	INITIALIZED,NOT_INITIALIZED
+}APP_SystemStatus;
+
+
+#endif /* APP_H_ */

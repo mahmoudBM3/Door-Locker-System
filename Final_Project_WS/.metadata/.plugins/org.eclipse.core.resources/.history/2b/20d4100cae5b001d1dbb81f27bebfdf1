@@ -1,0 +1,12 @@
+/*
+ * buzzer.c
+ *
+ *  Created on: Nov 3, 2022
+ *      Author: mabkr
+ */
+#include"gpio.h"
+void BUZZER_init(void){
+	GPIO_setupPinDirection(BUZZER_PORT_ID,BUZZER_PIN_ID,PIN_OUTPUT);
+}
+
+

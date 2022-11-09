@@ -1,0 +1,58 @@
+/*
+ * main.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+#include "std_types.h"
+#include "uart.h"
+#define	WRONG_CONFIRMATION	255
+#define OPEN_DOOR			'+'
+#define RESET_PASSWORD		'-'
+#define SET_PASSWORD		255
+#define SYSTEM_START		255
+#define PASSWORD_MATCH		254
+void APP_setPassword(void) {
+	uint8 password1[5];
+	uint8 password2[5];
+	uint8 count = 0;
+	uint8 flag = 1;
+
+	while (1) {
+		UART_sendByte(SET_PASSWORD);
+		for (count = 0; count < 5; count++) {
+			password1[count] = UART_receiveByte();
+		}
+		for (count = 0; count < 5; count++) {
+			password2[count] = UART_receiveByte();
+		}
+		for (count = 0; count < 5; count++) {
+			if (password1[count] != password2[count]) {
+				flag = 0;
+			}
+		}
+		if (flag == 1) {
+			UART_sendByte(PASSWORD_MATCH);
+			/**PUT The PASSword in the EEPROM**/
+			break;
+		} else if (flag == 0) {
+			continue;
+		}
+	}
+
+}
+#include"uart.h"
+#include<util/delay.h>
+int main() {
+	{
+		UART_ConfigType uartconfig = { 9600, ASYNCH, EIGHTBIT, RECEIVEPOLLING,
+				TRANSMITPOLLING, ONEBIT, NOPARITY };
+		UART_init(&uartconfig);
+	}
+	APP_setPassword();
+	while (1) {
+
+
+	}
+}
+

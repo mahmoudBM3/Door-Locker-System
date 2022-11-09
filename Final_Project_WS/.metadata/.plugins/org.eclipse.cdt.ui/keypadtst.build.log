@@ -1,0 +1,20 @@
+18:22:35 **** Incremental Build of configuration Debug for project keypadtst ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 keypadtst.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:   10998 bytes (33.6% Full)
+(.text + .data + .bootloader)
+
+Data:         34 bytes (1.7% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+18:22:36 Build Finished. 0 errors, 0 warnings. (took 156ms)
+

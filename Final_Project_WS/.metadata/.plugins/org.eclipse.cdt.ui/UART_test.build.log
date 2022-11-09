@@ -1,0 +1,42 @@
+16:08:17 **** Incremental Build of configuration Debug for project UART_test ****
+make all 
+Building file: ../Exercise1.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"Exercise1.d" -MT"Exercise1.o" -c -o "Exercise1.o" "../Exercise1.c"
+In file included from ../Exercise1.c:13:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+../Exercise1.c: In function 'main':
+../Exercise1.c:16: warning: unused variable 'character'
+Finished building: ../Exercise1.c
+ 
+Building target: UART_test.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,UART_test.map -mmcu=atmega32 -o "UART_test.elf"  ./Exercise1.o ./gpio.o ./keypad.o ./lcd.o ./uart.o   
+Finished building target: UART_test.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S UART_test.elf  >"UART_test.lss"
+Finished building: UART_test.lss
+ 
+Create Flash image (ihex format)
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex UART_test.elf  "UART_test.hex"
+Finished building: UART_test.hex
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 UART_test.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:   11174 bytes (34.1% Full)
+(.text + .data + .bootloader)
+
+Data:          8 bytes (0.4% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+16:08:18 Build Finished. 0 errors, 2 warnings. (took 885ms)
+

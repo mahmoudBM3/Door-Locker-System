@@ -1,0 +1,112 @@
+#include"gpio.h"
+#include"keypad.h"
+
+uint8 KEYPAD_getPressedKey(void) {
+	/**Setting ROW&COL pins as inputs**/
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 1,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 2,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 3,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 1,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 2,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 3,
+			PIN_INPUT);
+	uint8 row = 0, col = 0;
+	for (col = 0; col < NUM_OF_COLS; col++) {
+		GPIO_setupPinDirection(KEYPAD_COL_PORT_ID,
+		KEYPAD_COL_FIRST_PIN_ID + col, PIN_OUTPUT);
+		GPIO_writePin(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + col,
+		BUTTON_IS_PRESSED);
+		for (row = 0; row < NUM_OF_ROWS; row++) {
+			if (GPIO_readPin(KEYPAD_ROW_PORT_ID,
+					KEYPAD_ROW_FIRST_PIN_ID + row)==BUTTON_IS_PRESSED) {
+				return (row * NUM_OF_COLS) + col + 1;
+			}
+		}
+		GPIO_setupPinDirection(KEYPAD_COL_PORT_ID,
+		KEYPAD_COL_FIRST_PIN_ID + col, PIN_INPUT);
+
+	}
+
+#ifdef Test
+	/**Setting ROW pins as outputs and writing LOGIC_HIGH to them**/
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID,
+			PIN_OUTPUT);
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 1,
+			PIN_OUTPUT);
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 2,
+			PIN_OUTPUT);
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 3,
+			PIN_OUTPUT);
+	GPIO_writePin(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID,
+	BUTTON_IS_PRESSED);
+	GPIO_writePin(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 1,
+	BUTTON_IS_PRESSED);
+	GPIO_writePin(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 2,
+	BUTTON_IS_PRESSED);
+	GPIO_writePin(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 3,
+	BUTTON_IS_PRESSED);
+	/**Setting COL pins as input to detect the COL**/
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 1,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 2,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 3,
+			PIN_INPUT);
+	uint8 colcount = 0;
+	for (colcount = 0; colcount < 4; colcount++) {
+		if (GPIO_readPin(KEYPAD_COL_PORT_ID,
+				KEYPAD_COL_FIRST_PIN_ID + colcount)==BUTTON_IS_PRESSED) {
+			break;
+		}
+
+	}
+	/**Setting COL pins as outputs and writing BUTTON_IS_PRESSED to them**/
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID,
+			PIN_OUTPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 1,
+			PIN_OUTPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 2,
+			PIN_OUTPUT);
+	GPIO_setupPinDirection(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 3,
+			PIN_OUTPUT);
+	GPIO_writePin(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID,
+	BUTTON_IS_PRESSED);
+	GPIO_writePin(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 1,
+	BUTTON_IS_PRESSED);
+	GPIO_writePin(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 2,
+	BUTTON_IS_PRESSED);
+	GPIO_writePin(KEYPAD_COL_PORT_ID, KEYPAD_COL_FIRST_PIN_ID + 3,
+	BUTTON_IS_PRESSED);
+	/**Setting COL pins as input to detect the COL**/
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 1,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 2,
+			PIN_INPUT);
+	GPIO_setupPinDirection(KEYPAD_ROW_PORT_ID, KEYPAD_ROW_FIRST_PIN_ID + 3,
+			PIN_INPUT);
+	uint8 rowcount = 0;
+	for (rowcount = 0; rowcount < 4; rowcount++) {
+		if (GPIO_readPin(KEYPAD_COL_PORT_ID,
+				KEYPAD_COL_FIRST_PIN_ID + rowcount)==BUTTON_IS_PRESSED) {
+			break;
+		}
+
+	}
+	return (rowcount * NUM_OF_COLS) + colcount + 1;
+#endif
+
+}
+

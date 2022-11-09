@@ -1,0 +1,25 @@
+/*
+ * app.h
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+#ifndef APP_H_
+#define APP_H_
+
+#define	WRONG_CONFIRMATION			255
+#define OPEN_DOOR					'+'
+#define RESET_PASSWORD				'-'
+#define SYSTEM_START				255
+#define PASSWORD_MATCHED			254
+#define PASSWORD_UNMATCHED			253
+#define PASSWORD_TRIALS_EXHAUSTED	252
+#define KEYPAD_DELAY				300
+typedef enum {
+	INITIALIZED,NOT_INITIALIZED
+}APP_SystemStatus;
+void APP_setPassword(void);
+void APP_systemControl(void);
+void APP_getPassword(void);
+#endif /* APP_H_ */

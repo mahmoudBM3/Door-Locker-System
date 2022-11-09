@@ -1,0 +1,16 @@
+/*
+ * uart.h
+ *
+ *  Created on: Oct 8, 2022
+ *      Author: mabkr
+ */
+
+#ifndef UART_H_
+#define UART_H_
+#include"std_types.h"
+typedef struct{
+
+}UART_ConfigType;
+
+
+#endif /* UART_H_ */

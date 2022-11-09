@@ -1,0 +1,33 @@
+/*
+ * main.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+
+
+#include"uart.h"
+#include"app.h"
+#include<util/delay.h>
+#include"buzzer.h"
+#include"timer1.h"
+#include"dc_motor.h"
+int main() {
+	{
+		UART_ConfigType uartconfig = { 9600, ASYNCH, EIGHTBIT, RECEIVEPOLLING,
+				TRANSMITPOLLING, ONEBIT, NOPARITY };
+		UART_init(&uartconfig);
+	}
+
+	APP_setPassword();
+	BUZZER_init();
+	DCMOTOR_init();
+	APP_openDoor();
+	while (1) {
+		APP_systemControl();
+
+
+	}
+}
+

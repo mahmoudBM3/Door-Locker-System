@@ -1,0 +1,12 @@
+/*
+ * external_eeprom.c
+ *
+ *  Created on: Nov 4, 2022
+ *      Author: mabkr
+ */
+#include"external_eeprom.h"
+uint8 EEPROM_readByte(uint16 addr,uint8 *u8data){
+
+}
+
+

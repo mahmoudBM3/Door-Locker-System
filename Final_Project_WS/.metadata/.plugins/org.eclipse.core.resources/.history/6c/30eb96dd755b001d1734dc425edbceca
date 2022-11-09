@@ -1,0 +1,21 @@
+/*
+ * app.h
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+
+#ifndef APP_H_
+#define APP_H_
+#include "std_types.h"
+void APP_setPassword(void) ;
+void APP_systemControl(void);
+#define	WRONG_CONFIRMATION	255
+#define OPEN_DOOR			'+'
+#define RESET_PASSWORD		'-'
+#define SET_PASSWORD		255
+#define SYSTEM_START		255
+#define PASSWORD_MATCH		254
+
+
+#endif /* APP_H_ */

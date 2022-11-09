@@ -1,0 +1,15 @@
+#include"dc_motor.h"
+#include"lcd.h"
+#include"lm35_sensor.h"
+#include"adc.h"
+#include"keypad.h"
+#include"seven_segment.h"
+#include<util/delay.h>
+int main() {
+	SEVENSEGMENT_init();
+	while (1){
+		SEVENSEGMENT_displayDigit(KEYPAD_getPressedKey());
+	}
+
+
+}

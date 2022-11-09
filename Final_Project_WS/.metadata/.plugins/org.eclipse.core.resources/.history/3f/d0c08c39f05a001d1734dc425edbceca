@@ -1,0 +1,27 @@
+/*
+ * main.c
+ *
+ *  Created on: Nov 2, 2022
+ *      Author: mabkr
+ */
+#include "std_types.h"
+#include "uart.h"
+#include "app.h"
+
+
+#include"uart.h"
+#include<util/delay.h>
+int main() {
+	{
+		UART_ConfigType uartconfig = { 9600, ASYNCH, EIGHTBIT, RECEIVEPOLLING,
+				TRANSMITPOLLING, ONEBIT, NOPARITY };
+		UART_init(&uartconfig);
+	}
+	APP_setPassword();
+	while (1) {
+		APP_systemControl();
+
+
+	}
+}
+
